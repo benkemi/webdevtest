@@ -1,0 +1,75 @@
+/**
+ * 3 main layouts in this css:
+ *
+ * 1 Main list view
+ * 2 Promo view wide
+ * 3 Promo view narrow
+ */
+ 
+/**
+ * Css Basic Reset rules
+ */
+html, body, div, span, h1, h2, h3, p, img,
+ul, li, form, label, table, tr, th, td,
+footer, header, menu, nav, section {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+ 
+/**
+ * Universal rules
+ */
+#main-container {
+  width: 90%;
+  max-width: 960px;
+  height: 520px;
+  margin: 0 auto;
+  font-weight: 700;
+  font-size: 24px;
+  font-family: Arial, Helvetica, sans-serif;
+  /*background: red;*/
+}
+img {
+  -webkit-filter: drop-shadow(5px 5px 3px #505050); /* Safari */
+  filter: drop-shadow(5px 5px 3px #505050);
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+
+/**
+ * Main list view rules
+ */
+.block-wrapper {
+  width: 100%;
+  margin-top: 34px;
+  /*background: blue;*/
+}
+.block-wrapper img {
+  width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.list-link {
+  display:block;
+  margin-top: 24px;
+  color: #036dbe;
+}
+.list-summary, .list-ddate {
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #444444;
+}
+.list-ddate {
+  padding-bottom: 30px;
+}
+
