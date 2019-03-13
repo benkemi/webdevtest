@@ -1,0 +1,109 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Second-Chance Promotions</title>
+  <meta name="description" content="Enter for the chance to win the Second-Chance prize of $1,000,000!">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="css/webdevtest.css">
+</head>
+
+<body>
+  <script>
+	// identifying which template to use
+    var url_string = window.location.href;
+	var url_splitted = url_string.split("?");
+	var template; //0 = list view, 1 = promotion view 01, 2 = promotion view 02, 3 = promotion view 03
+	
+	if (url_splitted.length < 2) {
+	  //list view, no parameters found
+	  template = 0;
+	}
+	else {
+	  //url contains parameter(s)
+      var url = new URL(url_string);
+      var check_param = url.searchParams.get("promo");
+	  
+      switch (check_param) {
+        case "promo01":
+		  template = 1;
+          break;
+        case "promo02":
+		  template = 2;
+          break;
+        case "promo03":
+		  template = 3;
+          break;
+        default:
+		  template = 0; //param: "promo" not found amongst parameters or value is invalid => default view is list view
+      }	
+	}
+	
+    console.log(url_splitted);
+    console.log(url);
+    console.log(check_param);
+    console.log(template);
+	
+	//load data from feed. Since whole logic relies on the object in it, we have to wait for the response and continue when done
+    fetch("js/webdevtest-data.js")
+      .then((resp) => resp.json())
+      .then(function(data) {
+        console.log(data);
+		
+		//variable to hold html and our common #main-container opening
+	    var html = '';
+		html += '<div id="main-container">';
+		
+		//identify which template to build
+	    if (template == 0) {
+	      //LIST VIEW
+		  
+		  //how many blocks we'll have in the list view
+		  var list_block_count = data.promotion_objects.length;
+          console.log("list_block_count " + list_block_count);
+		  
+		  //helper array, we need to rearrange the order of the blocks to match the order seen on mockup
+		  var rearranger = [1, 2, 0];
+		  
+		  //let's loop through the list blocks based on the data feed to be able to build the html
+          for (i = 0; i < list_block_count; i++) {
+		    //helper counter, we need to rearrange the order of the blocks to match the order seen on mockup
+			var j = rearranger[i];
+		  
+		    html += '<div class="block-wrapper">';
+			html +=   '<a href="index.html?promo=promo0' + (j + 1) + '">';
+			html +=     '<img alt="' + data.promotion_objects[j].promotion_name + '" src="' + data.promotion_objects[j].promo_image_url + '">';
+			html +=   '</a>';
+			html +=   '<a href="index.html?promo=promo0' + (j + 1) + '" class="list-link">' + data.promotion_objects[j].promotion_name;
+			html +=   '</a>';
+			html +=   '<div class="list-summary">' + data.promotion_objects[j].summary;
+			html +=   '</div>';
+			html +=   '<div class="list-ddate">Next Drawing Date: ' + transformDate(data.promotion_objects[j].drawings[0].drawing_date);
+			html +=   '</div>';
+			
+		    html += '</div>';			
+          }	  
+	    }
+		
+		
+		
+		//closing #main-container
+		html += '</div>';
+		
+		//put html inside the body
+		var bodye = document.getElementsByTagName("body")[0];
+        bodye.innerHTML =html;
+		
+    })
+	
+	
+	function transformDate(date_from_feed){
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      var transformed_date = new Date(date_from_feed);
+      return transformed_date.toLocaleDateString("en-US", options);
+    }
+  </script>
+</body>
+</html>
