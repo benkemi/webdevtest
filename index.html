@@ -1,0 +1,189 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Second-Chance Promotions</title>
+  <meta name="description" content="Enter for the chance to win the Second-Chance prize of $1,000,000!">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="css/webdevtest.css">
+</head>
+
+<body>
+  <script>
+    // identifying which template to use
+    var url_string = window.location.href;
+    var url_splitted = url_string.split("?");
+    var template; //0 = list view, 1 = promotion view 01, 2 = promotion view 02, 3 = promotion view 03
+    
+    if (url_splitted.length < 2) {
+      //list view, no parameters found
+      template = 0;
+    }
+    else {
+      //url contains parameter(s)
+      var url = new URL(url_string);
+      var check_param = url.searchParams.get("promo");
+      
+      switch (check_param) {
+        case "promo01":
+          template = 1;
+          break;
+        case "promo02":
+          template = 2;
+          break;
+        case "promo03":
+          template = 3;
+          break;
+        default:
+          template = 0; //param: "promo" not found amongst parameters or value is invalid => default view is list view
+      }
+    }
+    
+    //load data from feed. Since whole logic relies on the object in it, we have to wait for the response and continue when done
+    fetch("js/webdevtest-data.js")
+      .then((resp) => resp.json())
+      .then(function(data) {
+        //variable to hold html and our common #main-container opening
+        var html = '';
+        html += '<div id="main-container">';
+
+        //identify which template to build
+        if (template != 1 && template != 2 && template != 3) {
+          //LIST VIEW
+
+          //how many blocks we'll have in the list view
+          var list_block_count = data.promotion_objects.length;
+
+          //helper array, we need to rearrange the order of the blocks to match the order seen on mockup
+          var rearranger = [1, 2, 0];
+
+          //let's loop through the list blocks based on the data feed to be able to build the html
+          for (i = 0; i < list_block_count; i++) {
+            //helper counter, we need to rearrange the order of the blocks to match the order seen on mockup
+            var j = rearranger[i];
+
+            html += '<div class="block-wrapper">';
+            html +=   '<a href="index.html?promo=promo0' + (i + 1) + '">';
+            html +=     '<img alt="' + data.promotion_objects[j].promotion_name + '" src="' + data.promotion_objects[j].promo_image_url + '">';
+            html +=   '</a>';
+            html +=   '<a href="index.html?promo=promo0' + (i + 1) + '" class="list-link">' + data.promotion_objects[j].promotion_name;
+            html +=   '</a>';
+            html +=   '<div class="list-summary">' + data.promotion_objects[j].summary;
+            html +=   '</div>';
+            html +=   '<div class="list-ddate">Next Drawing Date: ' + transformDate(data.promotion_objects[j].drawings[0].drawing_date);
+            html +=   '</div>';
+            html += '</div>';
+          }
+
+          //set background back to white from default greay gradient
+          document.documentElement.style.backgroundImage = 'none';
+        }
+        else {
+          //PROMOTION VIEW
+
+          //helper array, we need to set the index of the promotion to the right part of the data feed based on our template id
+          var rearranger_template = {1 : 1, 2 : 2, 3 : 0};
+          var k = rearranger_template[template];
+
+          //setting title and meta description
+          document.title = data.promotion_objects[k].promotion_name;
+          document.getElementsByTagName("META")["description"].content = data.promotion_objects[k].summary;
+
+          html += '<div class="mobile-entry-deadline mobile-only">The Next Entry Deadline Is<br>' + transformDate(data.promotion_objects[k].entries[0].date);
+          html += '</div>';
+          html += '<div class="promo-banner">';
+          html +=   '<img alt="' + data.promotion_objects[k].promotion_name + '" src="' + data.promotion_objects[k].promo_image_url + '">';
+          html += '</div>';
+          html += '<div class="promo-name wide-only">' + data.promotion_objects[k].promotion_name;
+          html += '</div>';
+          html += '<div class="promo-summary">' + data.promotion_objects[k].summary;
+          html += '</div>';
+          html += '<div class="tables-wrapper">';
+          html +=   '<div class="promo-schedule">Drawing Schedule';
+          html +=   '</div>';
+
+
+          html +=   '<div class="promo-draws-table-wrapper">';
+          html +=     '<div class="draws-header-grouper">';
+          html +=       '<div class="draws-header-prize entry-cell">PRIZE</div>';
+          html +=       '<div class="draws-header-deadline entry-cell">ENTRY DEADLINE</div>';
+          html +=       '<div class="draws-header-date entry-cell">DRAWING DATE</div>';
+          html +=     '</div>';
+
+          var drawings_count = data.promotion_objects[k].drawings.length;
+
+          //let's loop through the drawings for this promo view to create all the rows
+          for (l = 0; l < drawings_count; l++) {
+            //adding hidden headers for second+ drawings for the mobile table version
+            if (l > 0) {
+              html += '<div class="draws-header-grouper draws-header-tohide">';
+              html +=   '<div class="draws-header-prize entry-cell">PRIZE</div>';
+              html +=   '<div class="draws-header-deadline entry-cell">ENTRY DEADLINE</div>';
+              html +=   '<div class="draws-header-date entry-cell">DRAWING DATE</div>';
+              html += '</div>';
+            }
+
+            html +=   '<div class="draws-row-grouper">';
+            html +=     '<div class="draws-row-prize entry-cell">' + data.promotion_objects[k].drawings[l].prize.replace(" Cash Prize", "") + '</div>';
+            html +=     '<div class="draws-row-deadline entry-cell">' + transformDate(data.promotion_objects[k].drawings[l].entry_deadline) + '</div>';
+            html +=     '<div class="draws-row-date entry-cell">' + transformDate(data.promotion_objects[k].drawings[l].drawing_date) + '</div>';
+            html +=   '</div>';
+          }
+          html +=   '</div>';
+
+          //entry info below table
+          html +=   '<div class="promo-entry-info">' + data.promotion_objects[k].entry_info;
+          html +=   '</div>';
+
+          //let's count how many entries we'll have
+          var entries_count = data.promotion_objects[k].entries.length;
+
+          html +=   '<div class="promo-tickets-entered">Your Total Tickets Entered: ' + entries_count;
+          html +=   '</div>';
+          html +=   '<div class="promo-tickets-warning">All entries are locked in at the time they are submitted and cannot be deleted';
+          html +=   '</div>';
+
+          html +=   '<div class="promo-tickets-table-wrapper">';
+          html +=     '<div class="entries-header-grouper">';
+          html +=       '<div class="entries-header-number entry-cell">ENTRY NUMBER</div>';
+          html +=       '<div class="entries-header-date entry-cell">DATE</div>';
+          html +=     '</div>';
+
+          //let's loop through the entries for this promo view to create all the rows
+          for (m = 0; m < entries_count; m++) {
+            //adding hidden headers for second+ entries for the mobile table version
+            if (m > 0) {
+              html += '<div class="entries-header-grouper entry-header-tohide">';
+              html +=   '<div class="entries-header-number entry-cell">ENTRY NUMBER</div>';
+              html +=   '<div class="entries-header-date entry-cell">DATE</div>';
+              html += '</div>';
+            }
+
+            html +=   '<div class="entries-row-grouper">';
+            html +=     '<div class="entries-row-number entry-cell">' + data.promotion_objects[k].entries[m].entry_number + '</div>';
+            html +=     '<div class="entries-row-date entry-cell">' + transformDate(data.promotion_objects[k].entries[m].date) + '</div>';
+            html +=   '</div>';
+          }
+
+          html +=   '</div>';
+          html += '</div>';
+        }
+
+        //closing #main-container
+        html += '</div>';
+
+        //put html inside the body
+        var bodye = document.getElementsByTagName("body")[0];
+        bodye.innerHTML =html;
+    })
+
+    function transformDate(date_from_feed){
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      var transformed_date = new Date(date_from_feed);
+      return transformed_date.toLocaleDateString("en-US", options);
+    }
+  </script>
+</body>
+</html>

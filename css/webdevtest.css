@@ -1,0 +1,245 @@
+/**
+ * 3 main layouts in this css:
+ *
+ * 1 Main list view
+ * 2 Promo view wide
+ * 3 Promo view narrow
+ */
+
+/**
+ * Css Basic Reset rules
+ */
+html, body, div, span, h1, h2, h3, p, img,
+ul, li, form, label, table, tr, th, td,
+footer, header, menu, nav, section {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/**
+ * Universal rules
+ */
+html {
+  height: 100%;
+  background-image: linear-gradient(#cccccc, #ffffff);
+}
+#main-container {
+  width: 90%;
+  max-width: 960px;
+  height: 520px;
+  margin: 0 auto;
+  font-weight: 700;
+  font-size: 24px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+img {
+  -webkit-filter: drop-shadow(5px 5px 3px #505050); /* Safari */
+  filter: drop-shadow(5px 5px 3px #505050);
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+
+/**
+ * Main list view rules
+ */
+.block-wrapper {
+  width: 100%;
+  margin-top: 34px;
+}
+.block-wrapper img {
+  width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.list-link {
+  display:block;
+  margin-top: 24px;
+  color: #036dbe;
+}
+.list-summary, .list-ddate {
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #444444;
+}
+.list-ddate {
+  padding-bottom: 30px;
+}
+
+/**
+ * Promo view wide
+ */
+.mobile-only {
+  display: none;
+}
+.promo-banner {
+  width: 90%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+}
+.promo-banner img {
+  width: 100%;
+}
+.promo-name {
+  margin-top: 30px;
+  font-weight: 400;
+  color: #000000;
+}
+.promo-summary, .promo-entry-info, .promo-tickets-warning {
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #444444;
+  line-height: 24px;
+}
+.promo-schedule, .promo-tickets-entered {
+  margin-top: 34px;
+  font-size: 18px;
+  color: #000000;
+  text-align: center;
+}
+.promo-tickets-warning {
+  text-align: center;
+}
+.promo-tickets-table-wrapper, .promo-draws-table-wrapper {
+  display: inline-block;
+  width: 100%;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #444444;
+  line-height: 24px;
+  background-color: #cccccc;
+}
+.entry-header-tohide, .draws-header-tohide {
+  display:none;
+}
+.entry-cell {
+  float: left;
+  text-align: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border-color: #ffffff;
+  border-style: solid;
+  border-width: 1px 3px 3px 1px;
+  box-sizing: border-box;
+}
+.draws-header-prize, .draws-row-prize {
+  width: 20%;
+}
+.draws-header-deadline, .draws-row-deadline {
+  width: 40%;
+}
+.draws-header-date, .draws-row-date {
+  width: 40%;
+}
+.draws-header-prize, .draws-header-deadline, .draws-header-date {
+  color: #ffffff;
+  background-color: #666666;
+}
+.entries-header-number, .entries-row-number {
+  width: 35%;
+}
+.entries-header-date, .entries-row-date {
+  width: 65%;
+}
+.entries-header-number, .entries-header-date {
+  color: #ffffff;
+  background-color: #666666;
+}
+
+
+/**
+ * Promo view narrow
+ */
+@media screen and (max-width: 480px) {
+  html {
+    background-image: none;
+  }
+  #main-container {
+    width: 96%
+  }
+  .mobile-only {
+    display: block;
+  }
+  .mobile-entry-deadline{
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 20px;
+    color: #b20000;
+    text-align: center;
+  }
+  .promo-banner {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .wide-only {
+    display:none;
+  }
+  .promo-summary {
+    width: 85%;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+  .tables-wrapper {
+    width: 85%;
+    margin: 0 auto;
+  }
+  .promo-tickets-warning {
+    color:#b20000;
+  }
+  .entries-header-grouper, .draws-header-grouper {
+    float: left;
+    width: 40%;
+  }
+  .entries-row-grouper, .draws-row-grouper {
+    float: right;
+    width: 60%;
+  }
+  .entry-header-tohide, .draws-header-tohide {
+    display: block;
+  }
+  .entry-cell{
+    width: 100%;
+  }
+  .promo-tickets-table-wrapper, .promo-draws-table-wrapper {
+    font-size: 12px;
+    color: #7b7b7b;
+    line-height: 20px;
+    background-color: #e2e2e2;
+  }
+  .entries-header-number, .entries-header-date, .draws-header-prize, .draws-header-deadline, .draws-header-date {
+    color: #000000;
+    background-color: #e2e2e2;
+  }
+  .entry-cell {
+    text-align: left;
+    padding-top: 4px;
+    padding-left: 6px;
+    padding-bottom: 16px;
+    border: none;
+    border-bottom: 1px solid #e6e6e6;
+  }
+  .entries-header-date, .entries-row-date, .draws-header-date, .draws-row-date {
+    border-bottom: 1px solid #d1d1d1;
+  }  
+}
+
+/**
+ * Small font-size fix to support some below 360px
+ */
+@media screen and (max-width: 360px) {
+  .promo-tickets-table-wrapper, .promo-draws-table-wrapper {
+    font-size: 11px;
+  }
+}
